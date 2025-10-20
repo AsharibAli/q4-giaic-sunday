@@ -10,7 +10,7 @@
   - Agents
   - Prompt Injection
   - Model Weights / Parameters
-  - Fine-Tuning Vs Prompt Engg.
+  - Fine-Tuning Vs Prompt Engg
   - AI vs AGI
   - RAG
 
