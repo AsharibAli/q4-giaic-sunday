@@ -11,7 +11,7 @@ Share the video on LinkedIn and X (Twitter), and tag **Sir Asharib Ali**, and **
 - Sir Asharib Ali: [LinkedIn](https://www.linkedin.com/in/AsharibAli/), [X (Twitter)](https://x.com/0xAsharib)
 - Sir Naeem Hussain: [LinkedIn](https://www.linkedin.com/in/agenticai-developer/), [X (Twitter)](https://x.com/itxx_naeem)
 
-**Submit Assignment Form:** [https://forms.gle/SBTQqS5Pxwq6cjN87](https://forms.gle/SBTQqS5Pxwq6cjN87)
+**Submit Assignment Form:** [https://forms.gle/CykgmNKutCP8MaiQ8](https://forms.gle/CykgmNKutCP8MaiQ8)
 
 ## Note
 
