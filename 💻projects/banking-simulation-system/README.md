@@ -24,7 +24,8 @@ Make sure you have the following installed on your system:
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/asharibali/banking-simulation-system
+git clone https://github.com/AsharibAli/q4-giaic-sunday.git
+cd 💻projects
 cd banking-simulation-system
 ```
 
