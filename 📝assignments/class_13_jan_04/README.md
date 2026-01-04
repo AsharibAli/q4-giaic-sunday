@@ -17,21 +17,27 @@ Create two simple containerized projects (**nextjs-docker** and **fastapi-docker
 
 2. Create `Dockerfile` in project root:
    ```dockerfile
-   FROM node:22-alpine # Install nodejs version 22
+   # Install nodejs version 22
+   FROM node:22-alpine 
    
-   WORKDIR /app # Set working directory means (where the commands will be executed)
+   # Set working directory means (where the commands will be executed)
+   WORKDIR /app 
    
-   COPY package*.json ./ # Copy package.json and package-lock.json to working directory
+   # Copy package.json and package-lock.json to working directory
+   COPY package*.json ./ 
    
-   RUN npm install # Install depedencies
+   # Install depedencies
+   RUN npm install
    
    COPY . . # Copy all files to working directory
    
    RUN npm run build # Build the project
    
-   EXPOSE 3000 # Application access port, localhost:3000 or 127.0.0.1:3000 
+   # Application access port, localhost:3000 or 127.0.0.1:3000 
+   EXPOSE 3000 
    
-   CMD ["npm", "start"] # Run the application
+   # Run the application
+   CMD ["npm", "start"] 
    ```
 
 3. Build & run:
@@ -69,19 +75,26 @@ Create two simple containerized projects (**nextjs-docker** and **fastapi-docker
 
 3. Create `Dockerfile` in project root:
    ```dockerfile
-   FROM python:3.12-slim # Install python version 3.12
+   # Install python version 3.12
+   FROM python:3.12-slim 
    
-   WORKDIR /app # Set working directory means (where the commands will be executed)
+   # Set working directory means (where the commands will be executed)
+   WORKDIR /app 
    
-   COPY . . # Copy all files to working directory
+   # Copy all files to working directory
+   COPY . . 
    
-   RUN pip install uv # Install uv
+   # Install uv using pip
+   RUN pip install uv 
    
-   RUN uv sync # Install all dependencies in project
+   # Install all dependencies in a project
+   RUN uv sync 
    
-   EXPOSE 8000 # Application access port, localhost:8000 or 127.0.0.1:8000
+   # Application access port, localhost:8000 or 127.0.0.1:8000
+   EXPOSE 8000 
    
-   CMD ["uv", "run", "fastapi", "dev", "main.py", "--host", "0.0.0.0"] # Run the application
+   # Run the application
+   CMD ["uv", "run", "fastapi", "dev", "main.py", "--host", "0.0.0.0"]
    ```
 
 4. Build & run:
