@@ -29,9 +29,11 @@ Create two simple containerized projects (**nextjs-docker** and **fastapi-docker
    # Install depedencies
    RUN npm install
    
-   COPY . . # Copy all files to working directory
+   # Copy all files to working directory
+   COPY . . 
    
-   RUN npm run build # Build the project
+   # Build the project
+   RUN npm run build
    
    # Application access port, localhost:3000 or 127.0.0.1:3000 
    EXPOSE 3000 
