@@ -2,7 +2,7 @@
 
 ## Assignment: Publishing Docker Images to Docker Hub
 
-Publish your **nextjs** & **fastapi** docker images that you created last week to Docker Hub.
+Publish your **nextjs** & **fastapi** docker images that you created [last week](https://github.com/AsharibAli/q4-giaic-sunday/tree/main/%F0%9F%93%9Dassignments/class_13_jan_04) to Docker Hub.
 
 ![dockerhub](https://media.geeksforgeeks.org/wp-content/uploads/20230419170724/Docker-hub-registry.webp)
 
