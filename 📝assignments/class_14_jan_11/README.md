@@ -86,10 +86,10 @@ Run the images as docker containers:
 
 ```bash
 # Next.js
-docker run -d -p 3000:3000 --name nextjs-docker <your-dockerhub-username>/nextjs-docker:latest
+docker run -d -p 3000:3000 --name my-nextjs-docker <your-dockerhub-username>/nextjs-docker:latest
 
 # FastAPI
-docker run -d -p 8000:8000 --name fastapi-docker <your-dockerhub-username>/fastapi-docker:latest
+docker run -d -p 8000:8000 --name my-fastapi-docker <your-dockerhub-username>/fastapi-docker:latest
 ```
 
 ---
