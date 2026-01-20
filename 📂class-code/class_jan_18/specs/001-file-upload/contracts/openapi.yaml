@@ -1,0 +1,297 @@
+openapi: 3.1.0
+info:
+  title: GIAIC DBMS File Upload API
+  description: API for uploading images and videos to Cloudflare R2 storage
+  version: 1.0.0
+  contact:
+    name: GIAIC DBMS Team
+
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://api.example.com
+    description: Production (placeholder)
+
+tags:
+  - name: Upload
+    description: File upload operations
+  - name: Health
+    description: Service health checks
+
+paths:
+  /api/upload:
+    post:
+      tags:
+        - Upload
+      summary: Upload a single file
+      description: |
+        Upload an image or video file to R2 storage.
+
+        **Supported formats:**
+        - Images: JPEG, PNG, GIF, WebP (max 100MB)
+        - Videos: MP4, WebM, MOV (max 500MB)
+      operationId: uploadFile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file to upload
+      responses:
+        '201':
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadedFile'
+              example:
+                storage_key: "550e8400-e29b-41d4-a716-446655440000/photo.jpg"
+                original_filename: "My Photo.jpg"
+                file_type: "image"
+                mime_type: "image/jpeg"
+                size_bytes: 1048576
+                uploaded_at: "2026-01-18T12:00:00Z"
+                url: "https://files.example.com/550e8400-e29b-41d4-a716-446655440000/photo.jpg"
+        '400':
+          description: Validation error (invalid type or size exceeded)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidType:
+                  summary: Invalid file type
+                  value:
+                    error:
+                      code: "INVALID_FILE_TYPE"
+                      message: "File type 'application/pdf' is not allowed. Supported types: JPEG, PNG, GIF, WebP (images) and MP4, WebM, MOV (videos)."
+                tooLarge:
+                  summary: File too large
+                  value:
+                    error:
+                      code: "FILE_TOO_LARGE"
+                      message: "File size 150MB exceeds maximum allowed 100MB for images."
+        '503':
+          description: Storage service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error:
+                  code: "STORAGE_ERROR"
+                  message: "Storage service is temporarily unavailable. Please try again later."
+
+  /api/upload/batch:
+    post:
+      tags:
+        - Upload
+      summary: Upload multiple files
+      description: |
+        Upload multiple files in a single request.
+        Each file is validated and uploaded independently.
+        Partial success is possible - some files may succeed while others fail.
+      operationId: uploadBatch
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - files
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: Array of files to upload
+      responses:
+        '200':
+          description: Batch upload completed (may include partial failures)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchUploadResponse'
+        '400':
+          description: No valid files provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /health:
+    get:
+      tags:
+        - Health
+      summary: Health check
+      description: Returns service health status including R2 connectivity
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: "healthy"
+                timestamp: "2026-01-18T12:00:00Z"
+                services:
+                  r2: "connected"
+        '503':
+          description: Service is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: "unhealthy"
+                timestamp: "2026-01-18T12:00:00Z"
+                services:
+                  r2: "disconnected"
+
+components:
+  schemas:
+    UploadedFile:
+      type: object
+      required:
+        - storage_key
+        - original_filename
+        - file_type
+        - mime_type
+        - size_bytes
+        - uploaded_at
+        - url
+      properties:
+        storage_key:
+          type: string
+          description: Unique identifier in R2 storage
+          example: "550e8400-e29b-41d4-a716-446655440000/photo.jpg"
+        original_filename:
+          type: string
+          description: Original filename provided by user
+          maxLength: 255
+          example: "My Photo.jpg"
+        file_type:
+          type: string
+          enum:
+            - image
+            - video
+          description: Category of file
+        mime_type:
+          type: string
+          description: MIME type of the file
+          example: "image/jpeg"
+        size_bytes:
+          type: integer
+          format: int64
+          description: File size in bytes
+          minimum: 1
+          example: 1048576
+        uploaded_at:
+          type: string
+          format: date-time
+          description: UTC timestamp of upload
+          example: "2026-01-18T12:00:00Z"
+        url:
+          type: string
+          format: uri
+          description: Shareable URL for the file
+          example: "https://files.example.com/550e8400-e29b-41d4-a716-446655440000/photo.jpg"
+
+    BatchUploadResponse:
+      type: object
+      required:
+        - successful
+        - failed
+        - total
+      properties:
+        successful:
+          type: array
+          items:
+            $ref: '#/components/schemas/UploadedFile'
+          description: Successfully uploaded files
+        failed:
+          type: array
+          items:
+            $ref: '#/components/schemas/FailedUpload'
+          description: Files that failed to upload
+        total:
+          type: integer
+          description: Total number of files in request
+          example: 3
+
+    FailedUpload:
+      type: object
+      required:
+        - filename
+        - error
+      properties:
+        filename:
+          type: string
+          description: Original filename of failed file
+          example: "document.pdf"
+        error:
+          $ref: '#/components/schemas/Error'
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          enum:
+            - INVALID_FILE_TYPE
+            - FILE_TOO_LARGE
+            - STORAGE_ERROR
+            - VALIDATION_ERROR
+          description: Error code for programmatic handling
+        message:
+          type: string
+          description: Human-readable error message
+          example: "File type is not allowed"
+
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+      properties:
+        status:
+          type: string
+          enum:
+            - healthy
+            - unhealthy
+          description: Overall service health
+        timestamp:
+          type: string
+          format: date-time
+          description: Health check timestamp
+        services:
+          type: object
+          properties:
+            r2:
+              type: string
+              enum:
+                - connected
+                - disconnected
+              description: R2 storage connectivity status

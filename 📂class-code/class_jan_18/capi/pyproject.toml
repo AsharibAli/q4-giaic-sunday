@@ -1,0 +1,16 @@
+[project]
+name = "capi"
+version = "0.1.0"
+description = "GIAIC DBMS - File Upload API for student media storage"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "python-multipart>=0.0.6",
+    "boto3>=1.34.0",
+    "python-magic>=0.4.27; sys_platform != 'win32'",
+    "python-magic-bin>=0.4.14; sys_platform == 'win32'",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+]

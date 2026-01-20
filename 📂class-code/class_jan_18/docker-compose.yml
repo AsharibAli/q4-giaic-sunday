@@ -1,0 +1,39 @@
+services:
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./capi
+      dockerfile: Dockerfile
+    container_name: giaic-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./capi/.env
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:8000
+    container_name: giaic-frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  default:
+    name: giaic-network
