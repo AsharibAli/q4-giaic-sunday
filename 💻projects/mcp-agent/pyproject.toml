@@ -1,0 +1,11 @@
+[project]
+name = "mcp-agent"
+version = "0.1.0"
+description = "A simple OpenAI Agent that connects with Github MCP Server for actions."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastmcp>=3.1.0",
+    "openai-agents>=0.10.5",
+    "python-dotenv>=1.2.2",
+]
