@@ -1,14 +1,13 @@
 """
-agent.py  —  OpenAI Agent + FastMCP Server
+agent.py  —  OpenAI Agent + MCP Client
 ============================================
-This file has 3 main parts:
+This file has 2 main parts:
 
-  1. FastMCP Server  (server.py) — contains our tools
-  2. MCP Client      — connects to the server
-  3. OpenAI Agent    — thinks and uses the tools
+  1. MCP Client      — connects to the server
+  2. OpenAI Agent    — thinks and uses the tools
 
 Flow:
-  User → Agent → MCP Client → FastMCP Server → Tool → Answer
+  User → Agent → MCP Client → MCP Server → Tool → Answer
 
 Setup:
   uv init mcp-agent
@@ -85,6 +84,7 @@ async def main():
         # Agent has 3 main parts:
         #
         # name         → any name for your agent
+        # model        → the model to use
         # instructions → tell the agent who it is and what to do
         # mcp_servers  → which MCP servers it can use
         #
@@ -95,7 +95,7 @@ async def main():
 
         agent = Agent(
             name="Personal AI Assistant",
-            model="gpt-5.3-codex",
+            model="gpt-5.4-2026-03-05",
 
             instructions="""
             You are a personal AI assistant.
